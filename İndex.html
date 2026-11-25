@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>İstanbul Panosu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+:root{--bg1:#0f1b2d;--bg2:#1d3557;--fg:#f1f5f9;--mut:#94a3b8;--card:rgba(255,255,255,.08);--acc:#fbbf24;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:var(--fg);background:#0f1b2d;background:linear-gradient(135deg,var(--bg1),var(--bg2));overflow:hidden;transition:opacity 2s}
+body.dim{opacity:.35}
+#photo{position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;background-position:center;opacity:0;transition:opacity 2s;z-index:0}
+#wrap{position:relative;z-index:1;height:100%;padding:4vh 5vw;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:space-between;justify-content:space-between}
+#time{font-size:20vw;font-weight:200;line-height:1;letter-spacing:-.02em}
+#date{font-size:4vw;color:var(--mut);margin-top:1vh}
+.row{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;margin:-1vw}
+.card{-webkit-flex:1 1 40%;flex:1 1 40%;margin:1vw;padding:2.5vh 3vw;background:var(--card);border-radius:20px}
+.lbl{font-size:2.2vw;color:var(--mut);text-transform:uppercase;letter-spacing:.1em}
+.big{font-size:8vw;font-weight:300;margin-top:.5vh}
+.sub{font-size:2.8vw;color:var(--mut)}
+.day{font-size:4vw;color:var(--acc);margin-top:.5vh}
+.bd{background:rgba(244,114,182,.22);border:2px solid #f472b6}
+.bd .day{color:#f9a8d4}
+a.btn{display:inline-block;margin-top:1.5vh;padding:1.4vh 3vw;background:var(--acc);color:#1b1b1b;border-radius:14px;font-size:3vw;text-decoration:none;font-weight:600}
+@media (orientation:landscape){#time{font-size:13vw}#date{font-size:3vw}.big{font-size:5vw}.sub{font-size:1.8vw}.lbl{font-size:1.4vw}.day{font-size:2.4vw}a.btn{font-size:1.8vw}}
+</style>
+</head>
+<body>
+<div id="photo"></div>
+<div id="wrap">
+  <div>
+    <div id="time">--:--</div>
+    <div id="date"></div>
+  </div>
+  <div class="row">
+    <div class="card">
+      <div class="lbl">İstanbul hava durumu</div>
+      <div class="big" id="temp">--°</div>
+      <div class="sub" id="wdesc">Veri bekleniyor…</div>
+      <div class="sub" id="wmore"></div>
+    </div>
+    <div class="card">
+      <div class="lbl">Trafik</div>
+      <div class="sub" style="margin-top:1vh">Canlı trafik için haritayı açın</div>
+      <a class="btn" href="https://maps.apple.com/?ll=41.0082,28.9784&amp;z=11">Haritalar'da aç</a>
+      <a class="btn" href="https://trafik.ibb.gov.tr">İBB Trafik</a>
+    </div>
+    <div class="card">
+      <div class="lbl">Özel gün</div>
+      <div class="day" id="day">-</div>
+      <div class="sub" id="dayn"></div>
+    </div>
+    <div class="card bd">
+      <div class="lbl">🎂 Doğum günü</div>
+      <div class="day" id="bday">-</div>
+      <div class="sub" id="bdayn"></div>
+    </div>
+  </div>
+</div>
+<script>
+// ---- AYARLAR ----
+var PHOTOS = []; // Örn: ["foto1.jpg","foto2.jpg"] (kendi barındırmanızdaki adresler)
+var PERSONAL = [ // Kişisel günler: [ay, gün, "Ad"]
+  [12, 22, "Seval'in doğum günü 🎂"],
+  [7, 18, "Bahar'ın doğum günü 🎂"],
+  [12, 8, "Ufuk'un doğum günü 🎂"],
+  [10, 8, "Kaan'ın doğum günü 🎂"],
+  [6, 1, "Arzu'nun doğum günü 🎂"],
+  [7, 17, "Hanife'nin doğum günü 🎂"],
+  [8, 1, "Atilla ve Ömrüm 🎉"],
+  [10, 4, "Ayhan'ın doğum günü 🎂"],
+  [10, 6, "Ömer'in doğum günü 🎂"],
+  [9, 22, "Sadet'in doğum günü 🎂"],
+  [10, 18, "Ebru'nun doğum günü 🎂"],
+  [12, 21, "Kamil'in doğum günü 🎂"],
+  [3, 27, "Teo'nun doğum günü 🎂"],
+  [2, 27, "Saraynaz'ın doğum günü 🎂"]
+];
+// Sabit resmî günler [ay, gün, ad]
+var FIXED = [[1,1,"Yılbaşı"],[1,10,"Çalışan Gazeteciler Günü"],[2,14,"Sevgililer Günü"],[3,8,"Dünya Kadınlar Günü"],[3,12,"İstiklal Marşı'nın Kabulü"],[3,14,"Tıp Bayramı"],[3,18,"Çanakkale Zaferi"],[3,21,"Nevruz"],[4,5,"Avukatlar Günü"],[4,7,"Dünya Sağlık Günü"],[5,29,"İstanbul'un Fethi"],[6,5,"Dünya Çevre Günü"],[7,1,"Denizcilik ve Kabotaj Bayramı"],[10,4,"Dünya Hayvanları Koruma Günü"],[10,19,"Muhtarlar Günü"],[11,20,"Dünya Çocuk Günü"],[12,3,"Dünya Engelliler Günü"],[12,10,"İnsan Hakları Günü"],[12,31,"Yılbaşı Gecesi"],[4,23,"Ulusal Egemenlik ve Çocuk Bayramı"],[5,1,"Emek ve Dayanışma Günü"],[5,19,"Gençlik ve Spor Bayramı"],[7,15,"Demokrasi ve Milli Birlik Günü"],[8,30,"Zafer Bayramı"],[10,29,"Cumhuriyet Bayramı"],[11,10,"Atatürk'ü Anma Günü"],[11,24,"Öğretmenler Günü"]];
+// Dini bayramlar (yaklaşık, kontrol edin): [yıl, ay, gün, ad]
+var RELIG = [[2026,12,10,"Regaib Kandili"],[2027,1,5,"Miraç Kandili"],[2027,1,24,"Berat Kandili"],[2027,2,8,"Ramazan'ın ilk günü"],[2027,3,5,"Kadir Gecesi"],[2027,3,9,"Ramazan Bayramı"],[2027,5,16,"Kurban Bayramı"],[2027,6,6,"Hicri Yılbaşı"],[2027,6,15,"Aşure Günü"],[2027,8,13,"Mevlid Kandili"]];
+
+function p2(n){return n<10?"0"+n:""+n}
+var DAYS=["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+var MONS=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+
+function tick(){
+  var d=new Date();
+  document.getElementById("time").innerHTML=p2(d.getHours())+":"+p2(d.getMinutes());
+  document.getElementById("date").innerHTML=d.getDate()+" "+MONS[d.getMonth()]+" "+d.getFullYear()+", "+DAYS[d.getDay()];
+  var h=d.getHours();
+  document.body.className=(h>=23||h<7)?"dim":"";
+}
+
+function nthSun(y,m,n){var d=new Date(y,m,1);return new Date(y,m,1+(7-d.getDay())%7+(n-1)*7);}
+function nearest(list){
+  var now=new Date(),t0=new Date(now.getFullYear(),now.getMonth(),now.getDate()),best=null,bd=1e9,i,k;
+  for(i=0;i<list.length;i++){k=Math.round((list[i][0]-t0)/86400000);if(k>=0&&k<bd){bd=k;best=list[i][1];}}
+  return best===null?null:[best,bd];
+}
+function fill(r,a,b){
+  var el=document.getElementById(a),en=document.getElementById(b);
+  if(!r){el.innerHTML="-";en.innerHTML="";return;}
+  if(r[1]===0){el.innerHTML="Bugün: "+r[0];en.innerHTML="";}
+  else{el.innerHTML=r[0];en.innerHTML=r[1]===1?"Yarın":r[1]+" gün kaldı";}
+}
+function specialDay(){
+  var y=new Date().getFullYear(),sp=[],bl=[],yy,i;
+  for(yy=y;yy<=y+1;yy++){
+    for(i=0;i<FIXED.length;i++) sp.push([new Date(yy,FIXED[i][0]-1,FIXED[i][1]),FIXED[i][2]]);
+    sp.push([nthSun(yy,4,2),"Anneler Günü"]);
+    sp.push([nthSun(yy,5,3),"Babalar Günü"]);
+    for(i=0;i<PERSONAL.length;i++) bl.push([new Date(yy,PERSONAL[i][0]-1,PERSONAL[i][1]),PERSONAL[i][2]]);
+  }
+  for(i=0;i<RELIG.length;i++) sp.push([new Date(RELIG[i][0],RELIG[i][1]-1,RELIG[i][2]),RELIG[i][3]]);
+  fill(nearest(sp),"day","dayn");
+  fill(nearest(bl),"bday","bdayn");
+}
+function PERSONAL_L(){return PERSONAL.length}
+
+function wtxt(c){
+  if(c===0)return"Açık";if(c<=2)return"Parçalı bulutlu";if(c===3)return"Kapalı";
+  if(c===45||c===48)return"Sisli";if(c>=51&&c<=57)return"Çisenti";
+  if(c>=61&&c<=67)return"Yağmurlu";if(c>=71&&c<=77)return"Karlı";
+  if(c>=80&&c<=82)return"Sağanak";if(c>=95)return"Gök gürültülü fırtına";return"Değişken";
+}
+function weather(){
+  var x=new XMLHttpRequest();
+  x.open("GET","https://api.open-meteo.com/v1/forecast?latitude=41.01&longitude=28.97&current=temperature_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FIstanbul",true);
+  x.timeout=15000;
+  x.onload=function(){
+    try{
+      var j=JSON.parse(x.responseText),c=j.current,dl=j.daily;
+      document.getElementById("temp").innerHTML=Math.round(c.temperature_2m)+"°";
+      document.getElementById("wdesc").innerHTML=wtxt(c.weather_code);
+      document.getElementById("wmore").innerHTML="En yüksek "+Math.round(dl.temperature_2m_max[0])+"° · En düşük "+Math.round(dl.temperature_2m_min[0])+"° · Rüzgar "+Math.round(c.wind_speed_10m)+" km/s";
+    }catch(e){fail();}
+  };
+  x.onerror=x.ontimeout=fail;
+  x.send();
+}
+function fail(){
+  document.getElementById("temp").innerHTML="--°";
+  document.getElementById("wdesc").innerHTML="Hava verisi alınamadı (kendi barındırmanızda canlı çalışır)";
+}
+
+var pi=0;
+function photo(){
+  if(!PHOTOS.length)return;
+  var el=document.getElementById("photo");
+  el.style.opacity=0;
+  setTimeout(function(){
+    el.style.backgroundImage="url("+PHOTOS[pi%PHOTOS.length]+")";
+    el.style.opacity=.35;pi++;
+  },2000);
+}
+
+tick();specialDay();weather();photo();
+setInterval(tick,10000);
+setInterval(specialDay,3600000);
+setInterval(weather,900000);
+setInterval(photo,30000);
+</script>
+</body>
+</html>
