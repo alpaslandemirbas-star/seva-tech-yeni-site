@@ -6,56 +6,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <style>
-:root{--bg1:#0f1b2d;--bg2:#1d3557;--fg:#f1f5f9;--mut:#94a3b8;--card:rgba(255,255,255,.08);--acc:#fbbf24;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg1:#12294d;--bg2:#2a5298;--fg:#ffffff;--mut:#d6e0ee;--card:rgba(255,255,255,.18);--acc:#ffd54a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:var(--fg);background:#0f1b2d;background:linear-gradient(135deg,var(--bg1),var(--bg2));overflow:hidden;transition:opacity 2s}
-body.dim{opacity:.35}
+body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:var(--fg);background:#0f1b2d;background:linear-gradient(135deg,var(--bg1),var(--bg2));overflow-x:hidden;overflow-y:auto;transition:opacity 2s}
+body.dim{opacity:.6}
 #photo{position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;background-position:center;opacity:0;transition:opacity 2s;z-index:0}
-#wrap{position:relative;z-index:1;height:100%;padding:4vh 5vw;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:space-between;justify-content:space-between}
-#time{font-size:20vw;font-weight:200;line-height:1;letter-spacing:-.02em}
-#date{font-size:4vw;color:var(--mut);margin-top:1vh}
-.row{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;margin:-1vw}
-.card{-webkit-flex:1 1 40%;flex:1 1 40%;margin:1vw;padding:2.5vh 3vw;background:var(--card);border-radius:20px}
+#wrap{position:relative;z-index:1;min-height:100%;padding:3vh 4vw;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:space-between;justify-content:space-between}
+#left{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column}
+#time{font-size:34vw;font-weight:200;line-height:1;letter-spacing:-.02em}
+#date{font-size:5vw;color:var(--mut);margin-top:1vh}
+.row{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;margin:1.5vh -1vw 0}
+.card{-webkit-flex:1 1 40%;flex:1 1 40%;margin:1vw;padding:2vh 2.5vw;background:var(--card);border-radius:20px;min-width:0}
 .lbl{font-size:2.2vw;color:var(--mut);text-transform:uppercase;letter-spacing:.1em}
 .big{font-size:8vw;font-weight:300;margin-top:.5vh}
-.sub{font-size:2.8vw;color:var(--mut)}
-.day{font-size:4vw;color:var(--acc);margin-top:.5vh}
-.bd{background:rgba(244,114,182,.22);border:2px solid #f472b6}
+.sub{font-size:2.6vw;color:var(--mut)}
+.day{font-size:4.4vw;color:var(--acc);margin-top:.5vh;line-height:1.15}
+.bd{background:rgba(244,114,182,.38);border:2px solid #f472b6}
 .bd .day{color:#f9a8d4}
-a.btn{display:inline-block;margin-top:1.5vh;padding:1.4vh 3vw;background:var(--acc);color:#1b1b1b;border-radius:14px;font-size:3vw;text-decoration:none;font-weight:600}
-@media (orientation:landscape){#time{font-size:13vw}#date{font-size:3vw}.big{font-size:5vw}.sub{font-size:1.8vw}.lbl{font-size:1.4vw}.day{font-size:2.4vw}a.btn{font-size:1.8vw}}
+.bd{-webkit-order:-2;order:-2}.sd{-webkit-order:-1;order:-1}
+#right{margin-top:1.5vh}
+#tcard{margin:0;padding:1.5vh 2vw 2vh;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;height:100%}
+#tframe{display:block;width:100%;height:30vh;border:0;border-radius:14px;margin-top:1vh;background:rgba(0,0,0,.25);-webkit-flex:1 1 auto;flex:1 1 auto;min-height:0}
+.links{margin-top:1vh;font-size:2vw;color:var(--mut)}
+.links a{color:var(--acc);text-decoration:none;margin-right:3vw}
+@media (orientation:landscape){
+ #wrap{-webkit-flex-direction:row;flex-direction:row;padding:3vh 3vw}
+ #left{-webkit-flex:1 1 56%;flex:1 1 56%;min-width:0;-webkit-justify-content:space-between;justify-content:space-between}
+ #right{-webkit-flex:1 1 44%;flex:1 1 44%;margin:0 0 0 2vw;min-width:0}
+ #time{font-size:16vw;font-size:min(16vw,24vh)}#date{font-size:3vw;font-size:min(3vw,4.5vh)}
+ .card{-webkit-flex:1 1 40%;flex:1 1 40%}
+ .big{font-size:5vw;font-size:min(5vw,9vh)}.sub{font-size:1.7vw;font-size:min(1.7vw,2.6vh)}.lbl{font-size:1.3vw;font-size:min(1.3vw,2vh)}.day{font-size:2.5vw;font-size:min(2.5vw,4vh)}
+ .links{font-size:1.4vw}
+ #tframe{height:auto;min-height:60vh}
+}
 </style>
 </head>
 <body>
 <div id="photo"></div>
 <div id="wrap">
-  <div>
-    <div id="time">--:--</div>
-    <div id="date"></div>
+  <div id="left">
+    <div>
+      <div id="time">--:--</div>
+      <div id="date"></div>
+    </div>
+    <div class="row">
+      <div class="card">
+        <div class="lbl">Sultanbeyli hava durumu</div>
+        <div class="big" id="stemp">--°</div>
+        <div class="sub" id="swdesc">Veri bekleniyor…</div>
+        <div class="sub" id="swmore"></div>
+        <div class="sub" id="srain"></div>
+      </div>
+      <div class="card sd">
+        <div class="lbl">Bugünün özelliği</div>
+        <div class="day" id="day">-</div>
+        <div class="sub" id="dayn"></div>
+      </div>
+      <div class="card bd">
+        <div class="lbl">🎂 Doğum günü</div>
+        <div class="day" id="bday">-</div>
+        <div class="sub" id="bdayn"></div>
+      </div>
+    </div>
   </div>
-  <div class="row">
-    <div class="card">
-      <div class="lbl">İstanbul hava durumu</div>
-      <div class="big" id="temp">--°</div>
-      <div class="sub" id="wdesc">Veri bekleniyor…</div>
-      <div class="sub" id="wmore"></div>
-    </div>
-    <div class="card">
-      <div class="lbl">Trafik</div>
-      <div class="sub" style="margin-top:1vh">Canlı trafik için haritayı açın</div>
-      <a class="btn" href="https://maps.apple.com/?ll=41.0082,28.9784&amp;z=11">Haritalar'da aç</a>
-      <a class="btn" href="https://trafik.ibb.gov.tr">İBB Trafik</a>
-    </div>
-    <div class="card">
-      <div class="lbl">Özel gün</div>
-      <div class="day" id="day">-</div>
-      <div class="sub" id="dayn"></div>
-    </div>
-    <div class="card bd">
-      <div class="lbl">🎂 Doğum günü</div>
-      <div class="day" id="bday">-</div>
-      <div class="sub" id="bdayn"></div>
+  <div id="right">
+    <div class="card" id="tcard">
+      <div class="lbl">Canlı trafik · İstanbul</div>
+      <iframe id="tframe" title="İstanbul trafik haritası" scrolling="no" frameborder="0" allowfullscreen></iframe>
+      <div class="links"><a href="https://maps.apple.com/?ll=41.0082,28.9784&amp;z=11">Haritalar’da aç</a><a href="https://uym.ibb.gov.tr/yharita6/">İBB Trafik</a></div>
     </div>
   </div>
 </div>
@@ -63,25 +82,28 @@ a.btn{display:inline-block;margin-top:1.5vh;padding:1.4vh 3vw;background:var(--a
 // ---- AYARLAR ----
 var PHOTOS = []; // Örn: ["foto1.jpg","foto2.jpg"] (kendi barındırmanızdaki adresler)
 var PERSONAL = [ // Kişisel günler: [ay, gün, "Ad"]
-  [12, 22, "Seval'in doğum günü 🎂"],
-  [7, 18, "Bahar'ın doğum günü 🎂"],
-  [12, 8, "Ufuk'un doğum günü 🎂"],
-  [10, 8, "Kaan'ın doğum günü 🎂"],
-  [6, 1, "Arzu'nun doğum günü 🎂"],
-  [7, 17, "Hanife'nin doğum günü 🎂"],
+  [12, 22, "Seval’in doğum günü 🎂"],
+  [7, 18, "Bahar’ın doğum günü 🎂"],
+  [12, 8, "Ufuk’un doğum günü 🎂"],
+  [10, 8, "Kaan’ın doğum günü 🎂"],
+  [6, 1, "Arzu’nun doğum günü 🎂"],
+  [7, 17, "Hanife’nin doğum günü 🎂"],
   [8, 1, "Atilla ve Ömrüm 🎉"],
-  [10, 4, "Ayhan'ın doğum günü 🎂"],
-  [10, 6, "Ömer'in doğum günü 🎂"],
-  [9, 22, "Sadet'in doğum günü 🎂"],
-  [10, 18, "Ebru'nun doğum günü 🎂"],
-  [12, 21, "Kamil'in doğum günü 🎂"],
-  [3, 27, "Teo'nun doğum günü 🎂"],
-  [2, 27, "Saraynaz'ın doğum günü 🎂"]
+  [10, 4, "Ayhan’ın doğum günü 🎂"],
+  [10, 6, "Ömer’in doğum günü 🎂"],
+  [9, 22, "Sadet’in doğum günü 🎂"],
+  [10, 18, "Ebru’nun doğum günü 🎂"],
+  [12, 21, "Kamil’in doğum günü 🎂"],
+  [3, 27, "Teo’nun doğum günü 🎂"],
+  [2, 27, "Saraynaz’ın doğum günü 🎂"]
 ];
 // Sabit resmî günler [ay, gün, ad]
-var FIXED = [[1,1,"Yılbaşı"],[1,10,"Çalışan Gazeteciler Günü"],[2,14,"Sevgililer Günü"],[3,8,"Dünya Kadınlar Günü"],[3,12,"İstiklal Marşı'nın Kabulü"],[3,14,"Tıp Bayramı"],[3,18,"Çanakkale Zaferi"],[3,21,"Nevruz"],[4,5,"Avukatlar Günü"],[4,7,"Dünya Sağlık Günü"],[5,29,"İstanbul'un Fethi"],[6,5,"Dünya Çevre Günü"],[7,1,"Denizcilik ve Kabotaj Bayramı"],[10,4,"Dünya Hayvanları Koruma Günü"],[10,19,"Muhtarlar Günü"],[11,20,"Dünya Çocuk Günü"],[12,3,"Dünya Engelliler Günü"],[12,10,"İnsan Hakları Günü"],[12,31,"Yılbaşı Gecesi"],[4,23,"Ulusal Egemenlik ve Çocuk Bayramı"],[5,1,"Emek ve Dayanışma Günü"],[5,19,"Gençlik ve Spor Bayramı"],[7,15,"Demokrasi ve Milli Birlik Günü"],[8,30,"Zafer Bayramı"],[10,29,"Cumhuriyet Bayramı"],[11,10,"Atatürk'ü Anma Günü"],[11,24,"Öğretmenler Günü"]];
+var FIXED = [[1,1,"Yılbaşı"],[1,10,"Çalışan Gazeteciler Günü"],[2,14,"Sevgililer Günü"],[3,8,"Dünya Kadınlar Günü"],[3,12,"İstiklal Marşı’nın Kabulü"],[3,14,"Tıp Bayramı"],[3,18,"Çanakkale Zaferi"],[3,21,"Nevruz"],[4,5,"Avukatlar Günü"],[4,7,"Dünya Sağlık Günü"],[5,29,"İstanbul’un Fethi"],[6,5,"Dünya Çevre Günü"],[7,1,"Denizcilik ve Kabotaj Bayramı"],[10,4,"Dünya Hayvanları Koruma Günü"],[10,19,"Muhtarlar Günü"],[11,20,"Dünya Çocuk Günü"],[12,3,"Dünya Engelliler Günü"],[12,10,"İnsan Hakları Günü"],[12,31,"Yılbaşı Gecesi"],[4,23,"Ulusal Egemenlik ve Çocuk Bayramı"],[5,1,"Emek ve Dayanışma Günü"],[5,19,"Gençlik ve Spor Bayramı"],[7,15,"Demokrasi ve Milli Birlik Günü"],[8,30,"Zafer Bayramı"],[10,29,"Cumhuriyet Bayramı"],[11,10,"Atatürk’ü Anma Günü"],[11,24,"Öğretmenler Günü"]];
 // Dini bayramlar (yaklaşık, kontrol edin): [yıl, ay, gün, ad]
-var RELIG = [[2026,12,10,"Regaib Kandili"],[2027,1,5,"Miraç Kandili"],[2027,1,24,"Berat Kandili"],[2027,2,8,"Ramazan'ın ilk günü"],[2027,3,5,"Kadir Gecesi"],[2027,3,9,"Ramazan Bayramı"],[2027,5,16,"Kurban Bayramı"],[2027,6,6,"Hicri Yılbaşı"],[2027,6,15,"Aşure Günü"],[2027,8,13,"Mevlid Kandili"]];
+var RELIG = [[2026,12,10,"Regaib Kandili"],[2027,1,5,"Miraç Kandili"],[2027,1,24,"Berat Kandili"],[2027,2,8,"Ramazan’ın ilk günü"],[2027,3,5,"Kadir Gecesi"],[2027,3,9,"Ramazan Bayramı"],[2027,5,16,"Kurban Bayramı"],[2027,6,6,"Hicri Yılbaşı"],[2027,6,15,"Aşure Günü"],[2027,8,13,"Mevlid Kandili"]];
+
+// Ek günler [ay, gün, ad]: istediğiniz günü buraya ekleyebilirsiniz
+var EXTRA=[[1,4,"Dünya Braille Günü"],[1,24,"Uluslararası Eğitim Günü"],[1,27,"Holokost’u Anma Günü"],[2,4,"Dünya Kanser Günü"],[2,11,"Dünya Hastalar Günü"],[2,20,"Dünya Sosyal Adalet Günü"],[2,21,"Dünya Anadil Günü"],[3,20,"Dünya Mutluluk Günü"],[3,21,"Dünya Down Sendromu Günü"],[3,22,"Dünya Su Günü"],[3,27,"Dünya Tiyatro Günü"],[4,2,"Dünya Otizm Farkındalık Günü"],[4,22,"Dünya Günü"],[4,23,"Dünya Kitap Günü"],[5,3,"Dünya Basın Özgürlüğü Günü"],[5,12,"Dünya Hemşireler Günü"],[5,31,"Dünya Sigarasız Günü"],[6,8,"Dünya Okyanuslar Günü"],[6,12,"Dünya Çocuk İşçiliğiyle Mücadele Günü"],[6,20,"Dünya Mülteciler Günü"],[7,11,"Dünya Nüfus Günü"],[8,12,"Uluslararası Gençlik Günü"],[8,19,"Dünya İnsani Yardım Günü"],[8,26,"Malazgirt Zaferi"],[9,8,"Dünya Okuma Yazma Günü"],[9,9,"İzmir’in Kurtuluşu"],[9,19,"Gaziler Günü"],[9,21,"Dünya Barış Günü"],[9,27,"Dünya Turizm Günü"],[10,1,"Dünya Yaşlılar Günü"],[10,5,"Dünya Öğretmenler Günü"],[10,10,"Dünya Ruh Sağlığı Günü"],[10,16,"Dünya Gıda Günü"],[10,24,"Birleşmiş Milletler Günü"],[11,14,"Dünya Diyabet Günü"],[11,16,"Dünya Hoşgörü Günü"],[11,25,"Kadına Yönelik Şiddete Karşı Uluslararası Mücadele Günü"],[11,27,"Deniz Piyadeleri Günü"],[12,1,"Dünya AIDS Günü"],[12,5,"Dünya Gönüllüler Günü"],[12,18,"Uluslararası Göçmenler Günü"]];
 
 function p2(n){return n<10?"0"+n:""+n}
 var DAYS=["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
@@ -113,10 +135,20 @@ function specialDay(){
     for(i=0;i<FIXED.length;i++) sp.push([new Date(yy,FIXED[i][0]-1,FIXED[i][1]),FIXED[i][2]]);
     sp.push([nthSun(yy,4,2),"Anneler Günü"]);
     sp.push([nthSun(yy,5,3),"Babalar Günü"]);
+    for(i=0;i<EXTRA.length;i++) sp.push([new Date(yy,EXTRA[i][0]-1,EXTRA[i][1]),EXTRA[i][2]]);
     for(i=0;i<PERSONAL.length;i++) bl.push([new Date(yy,PERSONAL[i][0]-1,PERSONAL[i][1]),PERSONAL[i][2]]);
   }
   for(i=0;i<RELIG.length;i++) sp.push([new Date(RELIG[i][0],RELIG[i][1]-1,RELIG[i][2]),RELIG[i][3]]);
-  fill(nearest(sp),"day","dayn");
+  var now=new Date(),t0=new Date(now.getFullYear(),now.getMonth(),now.getDate()),td=[],nx=nearest(sp);
+  for(i=0;i<sp.length;i++){if(Math.round((sp[i][0]-t0)/86400000)===0)td.push(sp[i][1]);}
+  var el=document.getElementById("day"),en=document.getElementById("dayn");
+  if(td.length){
+    el.innerHTML=td.join("<br>");
+    en.innerHTML="Bugün";
+  }else{
+    el.innerHTML="Bugün özel bir gün yok";
+    en.innerHTML=nx?("Sıradaki: "+nx[0]+" · "+(nx[1]===1?"yarın":nx[1]+" gün kaldı")):"";
+  }
   fill(nearest(bl),"bday","bdayn");
 }
 function PERSONAL_L(){return PERSONAL.length}
@@ -127,24 +159,26 @@ function wtxt(c){
   if(c>=61&&c<=67)return"Yağmurlu";if(c>=71&&c<=77)return"Karlı";
   if(c>=80&&c<=82)return"Sağanak";if(c>=95)return"Gök gürültülü fırtına";return"Değişken";
 }
-function weather(){
+function wxFetch(lat,lon,p){
   var x=new XMLHttpRequest();
-  x.open("GET","https://api.open-meteo.com/v1/forecast?latitude=41.01&longitude=28.97&current=temperature_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FIstanbul",true);
+  x.open("GET","https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&current=temperature_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum&timezone=Europe%2FIstanbul",true);
   x.timeout=15000;
   x.onload=function(){
     try{
-      var j=JSON.parse(x.responseText),c=j.current,dl=j.daily;
-      document.getElementById("temp").innerHTML=Math.round(c.temperature_2m)+"°";
-      document.getElementById("wdesc").innerHTML=wtxt(c.weather_code);
-      document.getElementById("wmore").innerHTML="En yüksek "+Math.round(dl.temperature_2m_max[0])+"° · En düşük "+Math.round(dl.temperature_2m_min[0])+"° · Rüzgar "+Math.round(c.wind_speed_10m)+" km/s";
-    }catch(e){fail();}
+      var j=JSON.parse(x.responseText),c=j.current,dl=j.daily,r=dl.precipitation_sum[0];
+      document.getElementById(p+"temp").innerHTML=Math.round(c.temperature_2m)+"°";
+      document.getElementById(p+"wdesc").innerHTML=wtxt(c.weather_code);
+      document.getElementById(p+"wmore").innerHTML="En yüksek "+Math.round(dl.temperature_2m_max[0])+"° · En düşük "+Math.round(dl.temperature_2m_min[0])+"° · Rüzgar "+Math.round(c.wind_speed_10m)+" km/s";
+      document.getElementById(p+"rain").innerHTML="🌧 Yağmur ihtimali %"+dl.precipitation_probability_max[0]+" · "+(r==null?0:r)+" mm";
+    }catch(e){wfail(p);}
   };
-  x.onerror=x.ontimeout=fail;
+  x.onerror=x.ontimeout=function(){wfail(p);};
   x.send();
 }
-function fail(){
-  document.getElementById("temp").innerHTML="--°";
-  document.getElementById("wdesc").innerHTML="Hava verisi alınamadı (kendi barındırmanızda canlı çalışır)";
+function weather(){wxFetch(40.9667,29.2667,"s");}
+function wfail(p){
+  document.getElementById(p+"temp").innerHTML="--°";
+  document.getElementById(p+"wdesc").innerHTML="Hava verisi alınamadı (kendi barındırmanızda canlı çalışır)";
 }
 
 var pi=0;
@@ -158,11 +192,15 @@ function photo(){
   },2000);
 }
 
-tick();specialDay();weather();photo();
+var TRAFFIC="https://yandex.com.tr/map-widget/v1/?ll=28.9784%2C41.0082&z=10&l=map%2Ctrf&lang=tr_TR";
+function traffic(){document.getElementById("tframe").src=TRAFFIC;}
+
+tick();specialDay();weather();photo();traffic();
 setInterval(tick,10000);
 setInterval(specialDay,3600000);
 setInterval(weather,900000);
 setInterval(photo,30000);
+setInterval(traffic,300000);
 </script>
 </body>
 </html>
